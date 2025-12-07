@@ -64,13 +64,13 @@
             text-align: center;
             position: relative;
             z-index: 2;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         h1 {
             font-weight: normal;
             letter-spacing: 4px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-size: 32px;
             color: #222;
             text-shadow: 0 2px 10px rgba(255,255,255,0.5);
@@ -79,8 +79,8 @@
         h2 {
             font-weight: normal;
             letter-spacing: 1px;
-            margin-bottom: 30px;
-            font-size: 22px;
+            margin-bottom: 20px;
+            font-size: 20px;
             line-height: 1.5;
             color: #333;
             transition: color 0.3s;
@@ -90,37 +90,72 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 
+        .question-image-container {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 25px auto;
+            border-radius: 50%;
+            overflow: hidden;
+
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            background: #fff;
+            transition: transform 0.5s ease;
+        }
+
+        .question-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+
         .btn {
             display: block;
             width: 100%;
             padding: 18px 20px;
-            margin: 15px 0;
-            background: rgba(255, 255, 255, 0.65);
+            margin: 14px 0;
+
+
+            background: #fff;
+
+
             border: 1px solid rgba(0,0,0,0.05);
+
             cursor: pointer;
             font-family: inherit;
             font-size: 16px;
             color: #444;
-            backdrop-filter: blur(10px);
             border-radius: 12px;
-            transition: all 0.2s ease;
+
+
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
 
+
         .btn:active {
-            transform: scale(0.98);
-            background: rgba(255, 255, 255, 0.9);
+            transform: scale(0.97);
+            background: #fcfcfc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
+
 
         @media (hover: hover) {
             .btn:hover {
-                background: #fff;
-                transform: translateY(-2px);
-                box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+
+                transform: translateY(-3px);
+
+                box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+
                 border-color: var(--current-theme);
-                letter-spacing: 1px;
+                color: var(--current-theme);
+                font-weight: 500;
             }
         }
 
@@ -148,7 +183,6 @@
             position: relative;
             margin-bottom: 20px;
             color: #000;
-
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
             animation: printReceipt 1s ease-out forwards;
         }
@@ -157,13 +191,11 @@
         .receipt-content {
             padding: 20px 25px;
             background: #fff;
-
             background-image: radial-gradient(circle at 10px -5px, transparent 12px, #fff 13px);
             background-size: 20px 20px;
             background-position: 0 0;
             background-repeat: repeat-x;
         }
-
 
         .receipt::before {
             content: "";
@@ -172,14 +204,12 @@
             left: 0;
             width: 100%;
             height: 20px;
-
             background: linear-gradient(135deg, transparent 10px, #fff 0),
                         linear-gradient(225deg, transparent 10px, #fff 0);
             background-position: top left, top right;
             background-size: 20px 20px;
             background-repeat: repeat-x;
         }
-
 
         .receipt::after {
             content: "";
@@ -188,7 +218,6 @@
             left: 0;
             width: 100%;
             height: 20px;
-
             background: linear-gradient(315deg, transparent 10px, #fff 0),
                         linear-gradient(45deg, transparent 10px, #fff 0);
             background-position: top left, top right;
@@ -203,7 +232,7 @@
 
         .receipt-header {
             text-align: center;
-            border-bottom: 2px dashed #333; /* 内部虚线 */
+            border-bottom: 2px dashed #333;
             padding-bottom: 15px;
             margin-bottom: 15px;
         }
@@ -225,7 +254,7 @@
         }
 
         .receipt-footer {
-            border-top: 2px dashed #333; /* 内部虚线 */
+            border-top: 2px dashed #333;
             padding-top: 15px;
             font-size: 11px;
             text-align: center;
@@ -243,7 +272,6 @@
             position: relative;
             top: 2px;
         }
-
 
         .retry-btn {
             background: none;
@@ -279,18 +307,24 @@
         <p style="margin-bottom: 50px; font-style: italic; opacity: 0.7; line-height: 2;">
             这里不出售逻辑<br>只找零随机的浪漫
         </p>
-        <button class="btn" onclick="startQuiz()">投币开始</button>
+        <button class="btn" style="font-weight: bold;" onclick="startQuiz()">投币开始</button>
     </div>
 
     <div id="quiz-screen" class="container hidden">
         <div class="progress-container">NO. <span id="q-num">1</span>/5</div>
+
+        <div class="question-image-container fade-in">
+            <img id="q-image" class="question-image" src="" alt="">
+        </div>
+
         <h2 id="question-text">问题加载中...</h2>
         <div id="options-container"></div>
     </div>
 
     <div id="result-screen" class="container">
         <div class="receipt">
-            <div style="padding: 25px;"> <div class="receipt-header">
+            <div style="padding: 25px;">
+                <div class="receipt-header">
                     <div style="font-weight:900; letter-spacing:2px; font-size:18px;">无逻辑商店</div>
                     <div style="font-size: 10px; margin-top:8px;">DATE: <span id="date-now"></span></div>
                     <div style="font-size: 10px;">TIME: <span id="time-now"></span></div>
@@ -325,6 +359,7 @@
         const questions = [
             {
                 text: "你遇见了一盏月亮：",
+                img: "Q1.png",
                 options: [
                     { t: "吃掉它，然后将黑夜吐出", s: 1 },
                     { t: "问它是否记得明天的样子", s: 2 },
@@ -338,6 +373,7 @@
             },
             {
                 text: "你认为美是：",
+                img: "Q2.png",
                 options: [
                     { t: "阿芙洛狄忒", s: 1 },
                     { t: "世界", s: 2 },
@@ -351,6 +387,7 @@
             },
             {
                 text: "时间在你眼中是什么形状？",
+                img: "Q3.png",
                 options: [
                     { t: "一个没有出口的图书馆", s: 1 },
                     { t: "一张不断写满又擦除的草稿纸", s: 2 },
@@ -364,6 +401,7 @@
             },
             {
                 text: "你此刻是什么颜色：",
+                img: "Q4.png",
                 options: [
                     { t: "星期二的浅蓝色", s: 1 },
                     { t: "八分熟", s: 2 },
@@ -377,6 +415,7 @@
             },
             {
                 text: "你是一封信，你希望被投递到哪里？",
+                img: "Q5.png",
                 options: [
                     { t: "十年之前", s: 1 },
                     { t: "一个被遗忘的色彩", s: 2 },
@@ -463,6 +502,16 @@
             const qText = document.getElementById('question-text');
             qText.innerText = q.text;
             qText.style.textShadow = `0 0 20px ${themeColor}`;
+
+
+            const qImage = document.getElementById('q-image');
+            qImage.src = q.img;
+
+
+            const imgContainer = document.querySelector('.question-image-container');
+            imgContainer.classList.remove('fade-in');
+            void imgContainer.offsetWidth; // 触发重绘
+            imgContainer.classList.add('fade-in');
 
 
             document.getElementById('q-num').innerText = currentQIndex + 1;
