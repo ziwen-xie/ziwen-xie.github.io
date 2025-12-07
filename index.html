@@ -2,12 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>无逻辑浪漫贩卖机</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>无意义贩卖机</title>
     <style>
-        /* --- 基础设定 --- */
+
         :root {
             --text-color: #333;
+            --current-theme: #555;
         }
 
         body {
@@ -19,86 +20,61 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            background-color: #fff; /* 背景底色设为纯白 */
+            background-color: #fff;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* =========================================
-           新增：动态水彩背景层
-        ========================================= */
+
         .watercolor-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1; /* 放在最底层 */
+            z-index: -1;
             overflow: hidden;
-            /* 核心技巧：极度模糊，制造晕染效果 */
-            filter: blur(80px);
-            opacity: 0.6; /* 整体透明度，让颜色更清透 */
+            filter: blur(60px);
+            opacity: 0.5;
+            transition: all 1s ease;
         }
 
         .blob {
             position: absolute;
             border-radius: 50%;
-            /* 使用混合模式让颜色叠加更像颜料 */
             mix-blend-mode: multiply;
             animation: move 20s infinite ease-in-out alternate;
-            transition: background-color 2s ease; /* 颜色变化的过渡 */
+            transition: background-color 1.5s ease;
         }
 
-        /* 初始状态的三个色块：设定不同的位置、大小、颜色和动画延迟 */
-        .blob-1 {
-            top: -10%;
-            left: -10%;
-            width: 50vmax;
-            height: 50vmax;
-            background-color: #ffda84; /* 初始暖黄 */
-            animation-delay: 0s;
-        }
+        .blob-1 { top: -10%; left: -10%; width: 50vmax; height: 50vmax; background-color: #ffda84; animation-delay: 0s; }
+        .blob-2 { bottom: -20%; right: -10%; width: 60vmax; height: 60vmax; background-color: #ffdfd6; animation-delay: -5s; }
+        .blob-3 { bottom: 10%; left: 20%; width: 40vmax; height: 40vmax; background-color: #b3b3e0; animation-delay: -10s; }
 
-        .blob-2 {
-            bottom: -20%;
-            right: -10%;
-            width: 60vmax;
-            height: 60vmax;
-            background-color: #ffdfd6; /* 初始粉红 */
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            bottom: 10%;
-            left: 20%;
-            width: 40vmax;
-            height: 40vmax;
-            background-color: #b3b3e0; /* 初始浅蓝 */
-            animation-delay: -10s;
-        }
-
-        /* 让色块缓慢移动的动画 */
         @keyframes move {
             0% { transform: translate(0, 0) rotate(0deg) scale(1); }
             50% { transform: translate(10%, 20%) rotate(90deg) scale(1.1); }
             100% { transform: translate(-10%, 10%) rotate(180deg) scale(0.9); }
         }
 
-        /* =========================================
-           原有的内容容器样式
-        ========================================= */
         .container {
-            width: 90%;
+            width: 88%;
             max-width: 500px;
             text-align: center;
             position: relative;
             z-index: 2;
         }
 
-        /* --- 首页与问题页 --- */
         h1, h2 {
             font-weight: normal;
             letter-spacing: 2px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            transition: color 0.5s ease;
         }
+
+
+        h1 { font-size: 28px; margin-bottom: 40px; }
+        h2 { font-size: 22px; }
 
         .fade-in {
             animation: fadeIn 0.8s ease-in-out;
@@ -109,122 +85,135 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+
         .btn {
             display: block;
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            /* 按钮背景稍微透明一点，透出后面的水彩 */
-            background: rgba(255, 255, 255, 0.5);
+            padding: 16px 15px;
+            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(0,0,0,0.1);
             cursor: pointer;
             font-family: inherit;
             font-size: 16px;
             transition: all 0.3s;
-            backdrop-filter: blur(10px); /* 毛玻璃效果增强 */
-            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+
+
+            color: #444;
+            -webkit-tap-highlight-color: transparent;
+            appearance: none;
+            -webkit-appearance: none;
         }
 
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: scale(1.02);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            letter-spacing: 1px;
+        .btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.9);
         }
 
-        /* --- 进度条 --- */
+
+        @media (hover: hover) {
+            .btn:hover {
+                background: #fff;
+                transform: scale(1.02);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-color: var(--current-theme);
+                color: var(--current-theme);
+            }
+        }
+
         .progress-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 25px;
+            right: 25px;
             font-size: 12px;
-            opacity: 0.5;
+            opacity: 0.6;
+            letter-spacing: 1px;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        /* --- 结果页：小票打印机风格 --- */
-        #result-screen {
-            display: none;
-            perspective: 1000px;
-        }
+
+        #result-screen { display: none; }
 
         .receipt {
-            background: rgba(255, 255, 255, 0.95); /* 小票稍微不透明一点 */
-            padding: 30px;
-            width: 80%;
-            margin: 0 auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
             text-align: left;
             font-family: 'Courier New', Courier, monospace;
             position: relative;
             transform-origin: top;
             animation: printReceipt 1.5s ease-out forwards;
-            border-radius: 2px;
+            margin-bottom: 20px;
         }
 
-        /* 锯齿边缘调整 */
-        .receipt::before {
+
+        .receipt::before, .receipt::after {
             content: "";
             position: absolute;
-            top: -10px;
             left: 0;
             width: 100%;
-            height: 10px;
-            background: linear-gradient(45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%),
-                        linear-gradient(-45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%);
-            background-size: 20px 20px;
+            height: 6px;
+            background-size: 12px 12px;
+        }
+        .receipt::before {
+            top: -6px;
+            background: linear-gradient(45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%),
+                        linear-gradient(-45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%);
         }
         .receipt::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: linear-gradient(45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%),
-                        linear-gradient(-45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%);
-            background-size: 20px 20px;
+            bottom: -6px;
+            background: linear-gradient(45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%),
+                        linear-gradient(-45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%);
             transform: rotate(180deg);
         }
 
         @keyframes printReceipt {
-            0% { opacity: 0; transform: translateY(-50px) scaleY(0.8); }
+            0% { opacity: 0; transform: translateY(-30px) scaleY(0.9); }
             100% { opacity: 1; transform: translateY(0) scaleY(1); }
         }
 
         .receipt-header {
             text-align: center;
-            border-bottom: 2px dashed #000;
+            border-bottom: 1px dashed #aaa;
             padding-bottom: 15px;
             margin-bottom: 15px;
         }
 
         .receipt-body h2 {
-            font-size: 24px;
+            font-size: 22px;
             margin: 10px 0;
             font-weight: bold;
+            color: #000;
         }
 
         .receipt-text {
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            color: #444;
         }
 
         .receipt-footer {
-            border-top: 2px dashed #000;
-            padding-top: 10px;
-            font-size: 10px;
+            border-top: 1px dashed #aaa;
+            padding-top: 15px;
+            font-size: 11px;
             text-align: center;
-            opacity: 0.6;
+            opacity: 0.7;
         }
 
         .color-dot {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            margin-right: 5px;
-            border: 1px solid #000;
+            margin-right: 8px;
+            border: 1px solid rgba(0,0,0,0.2);
+            position: relative;
+            top: 2px;
         }
 
         .hidden { display: none; }
@@ -239,9 +228,11 @@
     </div>
 
     <div id="start-screen" class="container fade-in">
-        <h1>浪漫贩卖机</h1>
-        <p style="margin-bottom: 30px; font-style: italic;">这里不出售逻辑，只找零浪漫。</p>
-        <button class="btn" onclick="startQuiz()">投币开始</button>
+        <h1>无意义贩卖机</h1>
+        <p style="margin-bottom: 40px; font-style: italic; opacity: 0.8; line-height: 1.8;">
+            这里不出售逻辑<br>只找零随机的浪漫
+        </p>
+        <button class="btn" style="color: #333;" onclick="startQuiz()">投币开始</button>
     </div>
 
     <div id="quiz-screen" class="container hidden">
@@ -253,29 +244,37 @@
     <div id="result-screen" class="container">
         <div class="receipt">
             <div class="receipt-header">
-                <div>无逻辑商店</div>
-                <div style="font-size: 10px;">DATE: <span id="date-now"></span></div>
+                <div style="font-weight:bold; letter-spacing:1px;">无逻辑商店</div>
+                <div style="font-size: 10px; margin-top:5px;">DATE: <span id="date-now"></span></div>
                 <div style="font-size: 10px;">TIME: <span id="time-now"></span></div>
             </div>
 
             <div class="receipt-body">
-                <div style="font-size: 12px; color:#666;">您的购买项：</div>
+                <div style="font-size: 12px; color:#888; margin-bottom:5px;">ITEM PURCHASED:</div>
                 <h2 id="result-title">结果标题</h2>
-                <div id="result-color-box" style="margin-bottom:10px; display:flex; align-items:center;">
-                    </div>
+                <div id="result-color-box" style="margin-bottom:20px; display:flex; align-items:center;"></div>
                 <p id="result-desc" class="receipt-text">结果解释文案...</p>
             </div>
 
             <div class="receipt-footer">
                 <p>THANK YOU FOR BEING WEIRD.</p>
                 <p>请截图保管您的浪漫存根</p>
-                <button onclick="location.reload()" style="background:none; border:none; border-bottom:1px solid #000; margin-top:10px; cursor:pointer;">再买一张</button>
+                <button onclick="location.reload()" style="background:none; border:none; border-bottom:1px solid #666; margin-top:15px; padding:5px; font-family:inherit; font-size:12px; color:#666;">再买一张</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. 题目数据 ---
+
+        const questionColors = [
+            "#779ecb",
+            "#b08db5",
+            "#8fbc8f",
+            "#d8a499",
+            "#e6cca0"
+        ];
+
+
         const questions = [
             {
                 text: "你遇见了一盏月亮：",
@@ -344,7 +343,7 @@
             }
         ];
 
-        // --- 2. 结果数据 ---
+
         const rawResults = [
             {title: "黄昏与狗", desc: "成功！成功在向你奔来！", colorCode: "#ffda84", colorName: "橘黄"},
             {title: "爆浆草莓", desc: "不试试怎么知道它会不会爆浆", colorCode: "#ffdfd6", colorName: "粉红"},
@@ -390,7 +389,7 @@
             };
         });
 
-        // --- 3. 逻辑控制 ---
+
 
         let currentQIndex = 0;
         let totalScore = 0;
@@ -404,10 +403,27 @@
 
         function renderQuestion() {
             const q = questions[currentQIndex];
-            document.getElementById('q-num').innerText = currentQIndex + 1;
+
+
+            const themeColor = questionColors[currentQIndex % questionColors.length];
+            document.documentElement.style.setProperty('--current-theme', themeColor);
+
+
+            const blobs = document.querySelectorAll('.blob');
+            blobs.forEach(blob => {
+                blob.style.backgroundColor = themeColor;
+                blob.style.opacity = '0.4';
+            });
+
 
             const qText = document.getElementById('question-text');
+            qText.style.color = themeColor;
             qText.innerText = q.text;
+
+
+            document.getElementById('q-num').innerText = currentQIndex + 1;
+
+
             qText.classList.remove('fade-in');
             void qText.offsetWidth;
             qText.classList.add('fade-in');
@@ -421,6 +437,11 @@
                 const btn = document.createElement('button');
                 btn.className = 'btn';
                 btn.innerText = opt.t;
+
+                btn.style.color = "#444";
+
+                btn.style.borderColor = hexToRgba(themeColor, 0.3);
+
                 btn.onclick = () => selectOption(opt.s);
                 optContainer.appendChild(btn);
             });
@@ -442,11 +463,9 @@
             const resultScreen = document.getElementById('result-screen');
             resultScreen.style.display = 'block';
 
-            // 查找结果
             let finalResult = results.find(r => totalScore >= r.min && totalScore < r.max);
             if (!finalResult) finalResult = results[results.length - 1];
 
-            // 填充内容
             document.getElementById('result-title').innerText = finalResult.title;
             document.getElementById('result-desc').innerText = finalResult.desc;
 
@@ -454,21 +473,31 @@
             document.getElementById('date-now').innerText = now.toLocaleDateString();
             document.getElementById('time-now').innerText = now.toLocaleTimeString();
 
-            // 颜色圆点
             const colorBox = document.getElementById('result-color-box');
-            colorBox.innerHTML = `<span class="color-dot" style="background-color:${finalResult.colorCode}"></span><span style="font-size:12px; font-family:'Courier New'">${finalResult.colorName} ${finalResult.colorCode}</span>`;
+            colorBox.innerHTML = `<span class="color-dot" style="background-color:${finalResult.colorCode}"></span><span style="font-size:12px; font-family:'Courier New', monospace; color:#666;">${finalResult.colorName} ${finalResult.colorCode}</span>`;
 
-            // --- 核心修改：改变背景色块的颜色 ---
-            // 获取所有的背景色块
+
             const blobs = document.querySelectorAll('.blob');
             blobs.forEach(blob => {
-                // 将它们的颜色改为结果色
                 blob.style.backgroundColor = finalResult.colorCode;
-                // 稍微调整一下透明度，让它们叠加起来更有层次感，而不是变成一片死色
-                blob.style.opacity = '0.8';
+                blob.style.opacity = '0.7';
             });
-            // 移除原来body的背景色设置，现在靠色块来撑起背景
+
             document.body.style.backgroundColor = '#fff';
+        }
+
+
+        function hexToRgba(hex, alpha) {
+            let c;
+            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                c= hex.substring(1).split('');
+                if(c.length== 3){
+                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c= '0x'+c.join('');
+                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+            }
+            return 'rgba(200,200,200,0.2)';
         }
     </script>
 </body>
