@@ -1,10 +1,475 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无逻辑浪漫贩卖机</title>
+    <style>
+        /* --- 基础设定 --- */
+        :root {
+            --text-color: #333;
+        }
+
+        body {
+            font-family: "Songti SC", "Noto Serif SC", "Times New Roman", serif;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-color: #fff; /* 背景底色设为纯白 */
+        }
+
+        /* =========================================
+           新增：动态水彩背景层
+        ========================================= */
+        .watercolor-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* 放在最底层 */
+            overflow: hidden;
+            /* 核心技巧：极度模糊，制造晕染效果 */
+            filter: blur(80px);
+            opacity: 0.6; /* 整体透明度，让颜色更清透 */
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            /* 使用混合模式让颜色叠加更像颜料 */
+            mix-blend-mode: multiply;
+            animation: move 20s infinite ease-in-out alternate;
+            transition: background-color 2s ease; /* 颜色变化的过渡 */
+        }
+
+        /* 初始状态的三个色块：设定不同的位置、大小、颜色和动画延迟 */
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vmax;
+            height: 50vmax;
+            background-color: #ffda84; /* 初始暖黄 */
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 60vmax;
+            height: 60vmax;
+            background-color: #ffdfd6; /* 初始粉红 */
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            bottom: 10%;
+            left: 20%;
+            width: 40vmax;
+            height: 40vmax;
+            background-color: #b3b3e0; /* 初始浅蓝 */
+            animation-delay: -10s;
+        }
+
+        /* 让色块缓慢移动的动画 */
+        @keyframes move {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            50% { transform: translate(10%, 20%) rotate(90deg) scale(1.1); }
+            100% { transform: translate(-10%, 10%) rotate(180deg) scale(0.9); }
+        }
+
+        /* =========================================
+           原有的内容容器样式
+        ========================================= */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- 首页与问题页 --- */
+        h1, h2 {
+            font-weight: normal;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            /* 按钮背景稍微透明一点，透出后面的水彩 */
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px); /* 毛玻璃效果增强 */
+            border-radius: 8px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            letter-spacing: 1px;
+        }
+
+        /* --- 进度条 --- */
+        .progress-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        /* --- 结果页：小票打印机风格 --- */
+        #result-screen {
+            display: none;
+            perspective: 1000px;
+        }
+
+        .receipt {
+            background: rgba(255, 255, 255, 0.95); /* 小票稍微不透明一点 */
+            padding: 30px;
+            width: 80%;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+            transform-origin: top;
+            animation: printReceipt 1.5s ease-out forwards;
+            border-radius: 2px;
+        }
+
+        /* 锯齿边缘调整 */
+        .receipt::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%),
+                        linear-gradient(-45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%);
+            background-size: 20px 20px;
+        }
+        .receipt::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%),
+                        linear-gradient(-45deg, transparent 33.333%, rgba(255,255,255,0.95) 33.333%, rgba(255,255,255,0.95) 66.667%, transparent 66.667%);
+            background-size: 20px 20px;
+            transform: rotate(180deg);
+        }
+
+        @keyframes printReceipt {
+            0% { opacity: 0; transform: translateY(-50px) scaleY(0.8); }
+            100% { opacity: 1; transform: translateY(0) scaleY(1); }
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .receipt-body h2 {
+            font-size: 24px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .receipt-text {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .receipt-footer {
+            border-top: 2px dashed #000;
+            padding-top: 10px;
+            font-size: 10px;
+            text-align: center;
+            opacity: 0.6;
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+            border: 1px solid #000;
+        }
+
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
-$END$
+
+    <div class="watercolor-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div id="start-screen" class="container fade-in">
+        <h1>浪漫贩卖机</h1>
+        <p style="margin-bottom: 30px; font-style: italic;">这里不出售逻辑，只找零浪漫。</p>
+        <button class="btn" onclick="startQuiz()">投币开始</button>
+    </div>
+
+    <div id="quiz-screen" class="container hidden">
+        <div class="progress-container">NO. <span id="q-num">1</span>/5</div>
+        <h2 id="question-text">问题加载中...</h2>
+        <div id="options-container"></div>
+    </div>
+
+    <div id="result-screen" class="container">
+        <div class="receipt">
+            <div class="receipt-header">
+                <div>无逻辑商店</div>
+                <div style="font-size: 10px;">DATE: <span id="date-now"></span></div>
+                <div style="font-size: 10px;">TIME: <span id="time-now"></span></div>
+            </div>
+
+            <div class="receipt-body">
+                <div style="font-size: 12px; color:#666;">您的购买项：</div>
+                <h2 id="result-title">结果标题</h2>
+                <div id="result-color-box" style="margin-bottom:10px; display:flex; align-items:center;">
+                    </div>
+                <p id="result-desc" class="receipt-text">结果解释文案...</p>
+            </div>
+
+            <div class="receipt-footer">
+                <p>THANK YOU FOR BEING WEIRD.</p>
+                <p>请截图保管您的浪漫存根</p>
+                <button onclick="location.reload()" style="background:none; border:none; border-bottom:1px solid #000; margin-top:10px; cursor:pointer;">再买一张</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. 题目数据 ---
+        const questions = [
+            {
+                text: "你遇见了一盏月亮：",
+                options: [
+                    { t: "吃掉它，然后将黑夜吐出", s: 1 },
+                    { t: "问它是否记得明天的样子", s: 2 },
+                    { t: "替代它", s: 3 },
+                    { t: "用一个不存在的名字为它命名", s: 4 },
+                    { t: "变成星星", s: 5 },
+                    { t: "计算出它的寂寞半径", s: 6 },
+                    { t: "把它折叠成一枚硬币", s: 7 },
+                    { t: "邀请它参加一个不存在的舞会", s: 8 }
+                ]
+            },
+            {
+                text: "你认为美是：",
+                options: [
+                    { t: "阿芙洛狄忒", s: 1 },
+                    { t: "世界", s: 2 },
+                    { t: "知识", s: 3 },
+                    { t: "鲸落", s: 4 },
+                    { t: "星星的毁灭", s: 5 },
+                    { t: "缺失", s: 6 },
+                    { t: "两条平行线相交的瞬间", s: 7 },
+                    { t: "所有语言都无法抵达的寂静", s: 8 }
+                ]
+            },
+            {
+                text: "时间在你眼中是什么形状？",
+                options: [
+                    { t: "一个没有出口的图书馆", s: 1 },
+                    { t: "一张不断写满又擦除的草稿纸", s: 2 },
+                    { t: "虚线", s: 3 },
+                    { t: "溶解在水中的方糖", s: 4 },
+                    { t: "时间是四维生物", s: 5 },
+                    { t: "无意义", s: 6 },
+                    { t: "昨夜窗外的雨滴声", s: 7 },
+                    { t: "一只不断飞向远方的海鸥", s: 8 }
+                ]
+            },
+            {
+                text: "你此刻是什么颜色：",
+                options: [
+                    { t: "星期二的浅蓝色", s: 1 },
+                    { t: "八分熟", s: 2 },
+                    { t: "黎明前五分钟的紫色", s: 3 },
+                    { t: "一拳打烂世界", s: 4 },
+                    { t: "失去颜色", s: 5 },
+                    { t: "一个秘密的重量，越重越黑", s: 6 },
+                    { t: "肉色", s: 7 },
+                    { t: "光的颜色", s: 8 }
+                ]
+            },
+            {
+                text: "你是一封信，你希望被投递到哪里？",
+                options: [
+                    { t: "十年之前", s: 1 },
+                    { t: "一个被遗忘的色彩", s: 2 },
+                    { t: "未完成的下一行诗", s: 3 },
+                    { t: "世界的尽头", s: 4 },
+                    { t: "海底的第三个抽屉", s: 5 },
+                    { t: "火星", s: 6 },
+                    { t: "随便哪里，只要不是这里", s: 7 },
+                    { t: "无限", s: 8 }
+                ]
+            }
+        ];
+
+        // --- 2. 结果数据 ---
+        const rawResults = [
+            {title: "黄昏与狗", desc: "成功！成功在向你奔来！", colorCode: "#ffda84", colorName: "橘黄"},
+            {title: "爆浆草莓", desc: "不试试怎么知道它会不会爆浆", colorCode: "#ffdfd6", colorName: "粉红"},
+            {title: "午夜咏叹调", desc: "写一首诗也许会好一些", colorCode: "#3d3d3d", colorName: "灰"},
+            {title: "错误代码404", desc: "你所想的在向你奔来", colorCode: "#00FF41", colorName: "绿"},
+            {title: "海底迪斯科", desc: "吃点好的", colorCode: "#B026FF", colorName: "紫"},
+            {title: "日光奏鸣曲", desc: "感到沮丧就跳一跳广场舞", colorCode: "#00008B", colorName: "深海蓝"},
+            {title: "黄曲霉菌与绿鲤鱼与驴", desc: "吃根辣条解解馋", colorCode: "#D4AF37", colorName: "枯叶黄"},
+            {title: "逃跑没有计划", desc: "要不别逃跑了", colorCode: "#b3b3e0", colorName: "浅蓝"},
+            {title: "薛定谔的靴子", desc: "去和小动物接触一下吧，尤其是猫猫", colorCode: "#FFF8DC", colorName: "白"},
+            {title: "下午三点的梦境", desc: "烦心事太多不如睡一觉", colorCode: "#9370DB", colorName: "星辰紫"},
+            {title: "狸花猫转转乐", desc: "兜兜转转回到原点", colorCode: "#FF0000", colorName: "气球红"},
+            {title: "诗与远方", desc: "普通的浪漫，浪漫的普通", colorCode: "#46c489", colorName: "蓝绿"},
+            {title: "橘子汽水", desc: "夏天的味道它们都知道", colorCode: "#FFA500", colorName: "橘色"},
+            {title: "半熟芝士", desc: "再坚持一下，马上就熟了", colorCode: "#FFFFE0", colorName: "淡黄"},
+            {title: "电子荒原", desc: "这里什么都没有，也什么都有", colorCode: "#708090", colorName: "石板灰"},
+            {title: "过期罐头", desc: "保质期只是一个建议，就像规则", colorCode: "#808000", colorName: "橄榄色"},
+            {title: "月亮碎片", desc: "捡起一片放在口袋里发光", colorCode: "#F0E68C", colorName: "卡其"},
+            {title: "失重宇航员", desc: "飘在哪里并不重要，重要的是在飘", colorCode: "#F0F8FF", colorName: "爱丽丝蓝"},
+            {title: "薄荷曼波", desc: "清醒一点，或者更醉一点", colorCode: "#98FF98", colorName: "薄荷绿"},
+            {title: "悲伤小狗", desc: "摸摸头，一切都会过去的", colorCode: "#8B4513", colorName: "鞍褐"},
+            {title: "摇滚土豆", desc: "虽然在土里，但心在舞台", colorCode: "#CD853F", colorName: "秘鲁色"},
+            {title: "透明的雨", desc: "哭出来就看不见了", colorCode: "#E0FFFF", colorName: "淡青"},
+            {title: "故障时钟", desc: "每天有两次准确的时间，这就够了", colorCode: "#2F4F4F", colorName: "深岩灰"},
+            {title: "彩虹独角兽", desc: "相信奇迹的人才能看见奇迹", colorCode: "#FF69B4", colorName: "热粉"},
+            {title: "冬日围巾", desc: "温暖是这个季节唯一的正义", colorCode: "#B22222", colorName: "耐火砖红"},
+            {title: "未命名的星星", desc: "你是独一无二的光", colorCode: "#FFD700", colorName: "金"},
+            {title: "深海气泡", desc: "虽然微小，但依然向上", colorCode: "#00CED1", colorName: "深绿松石"},
+            {title: "奶油蘑菇", desc: "在阴暗角落里也要长得可爱", colorCode: "#F5DEB3", colorName: "小麦"},
+            {title: "复古收音机", desc: "滋滋作响也是一种音乐", colorCode: "#A0522D", colorName: "赭色"},
+            {title: "无限", desc: "未来有无限可能", colorCode: "#FFFFFF", colorName: "纯白"}
+        ];
+
+        const minScore = 5;
+        const maxScore = 40;
+        const step = (maxScore - minScore) / rawResults.length;
+
+        const results = rawResults.map((item, index) => {
+            return {
+                ...item,
+                min: minScore + (index * step),
+                max: minScore + ((index + 1) * step)
+            };
+        });
+
+        // --- 3. 逻辑控制 ---
+
+        let currentQIndex = 0;
+        let totalScore = 0;
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.add('fade-in');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('q-num').innerText = currentQIndex + 1;
+
+            const qText = document.getElementById('question-text');
+            qText.innerText = q.text;
+            qText.classList.remove('fade-in');
+            void qText.offsetWidth;
+            qText.classList.add('fade-in');
+
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            let shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.innerText = opt.t;
+                btn.onclick = () => selectOption(opt.s);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(score) {
+            totalScore += score;
+            currentQIndex++;
+
+            if (currentQIndex < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.style.display = 'block';
+
+            // 查找结果
+            let finalResult = results.find(r => totalScore >= r.min && totalScore < r.max);
+            if (!finalResult) finalResult = results[results.length - 1];
+
+            // 填充内容
+            document.getElementById('result-title').innerText = finalResult.title;
+            document.getElementById('result-desc').innerText = finalResult.desc;
+
+            const now = new Date();
+            document.getElementById('date-now').innerText = now.toLocaleDateString();
+            document.getElementById('time-now').innerText = now.toLocaleTimeString();
+
+            // 颜色圆点
+            const colorBox = document.getElementById('result-color-box');
+            colorBox.innerHTML = `<span class="color-dot" style="background-color:${finalResult.colorCode}"></span><span style="font-size:12px; font-family:'Courier New'">${finalResult.colorName} ${finalResult.colorCode}</span>`;
+
+            // --- 核心修改：改变背景色块的颜色 ---
+            // 获取所有的背景色块
+            const blobs = document.querySelectorAll('.blob');
+            blobs.forEach(blob => {
+                // 将它们的颜色改为结果色
+                blob.style.backgroundColor = finalResult.colorCode;
+                // 稍微调整一下透明度，让它们叠加起来更有层次感，而不是变成一片死色
+                blob.style.opacity = '0.8';
+            });
+            // 移除原来body的背景色设置，现在靠色块来撑起背景
+            document.body.style.backgroundColor = '#fff';
+        }
+    </script>
 </body>
 </html>
