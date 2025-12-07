@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>无意义贩卖机 (最终版)</title>
+    <title>无意义贩卖机</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
 
@@ -20,8 +20,10 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            background-color: #fff;
+            background-color: #f9f9f9;
             -webkit-font-smoothing: antialiased;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
 
@@ -34,7 +36,7 @@
             z-index: -1;
             overflow: hidden;
             filter: blur(60px);
-            opacity: 0.5;
+            opacity: 0.6;
             transition: all 1s ease;
             pointer-events: none;
         }
@@ -64,26 +66,146 @@
             text-align: center;
             position: relative;
             z-index: 2;
-            padding: 10px 0;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+
+        .vending-machine-art {
+            position: relative;
+            width: 140px;
+            height: 190px;
+
+            margin: 20px auto 60px auto;
+
+
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow:
+                0 15px 35px rgba(0,0,0,0.05),
+                inset 0 0 20px rgba(255,255,255,0.5);
+
+            border-radius: 30px 30px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 25px;
+            transition: all 0.5s ease;
+        }
+
+
+        .vm-window {
+            width: 100px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+
+        .vm-ball {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(5px);
+            opacity: 0.8;
+        }
+
+
+        .vm-controls {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .vm-slot {
+            width: 40px;
+            height: 4px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+
+
+        .vm-out {
+            position: absolute;
+            bottom: 15px;
+            width: 70px;
+            height: 12px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+
+        .coin-trigger {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #ffd166, #ffaa00);
+            border: 1px solid #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 110px;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(255, 200, 0, 0.4);
+            animation: hoverCoin 2s infinite ease-in-out;
+        }
+
+        @keyframes hoverCoin {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .inserting-coin {
+            animation: dropCoin 0.8s forwards cubic-bezier(0.5, 0, 0.5, 1) !important;
+        }
+
+        @keyframes dropCoin {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translateY(40px) scale(0.5); opacity: 0; }
+        }
+
+
         h1 {
-            font-weight: normal;
+            font-weight: 300;
             letter-spacing: 4px;
-            margin-bottom: 30px;
-            font-size: 32px;
-            color: #222;
-            text-shadow: 0 2px 10px rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+            font-size: 26px;
+            color: #444;
+            margin-top: 30;
+        }
+
+        .subtitle {
+            font-size: 10px;
+            color: #888;
+            letter-spacing: 3px;
+            margin-top: 0;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            font-family: sans-serif;
+            opacity: 0.5;
         }
 
         h2 {
-            font-weight: normal;
+            font-weight: bold;
             letter-spacing: 1px;
-            margin-bottom: 20px;
-            font-size: 20px;
+            margin-bottom: 30px;
+            font-size: 22px;
             line-height: 1.5;
-            color: #333;
-            transition: color 0.3s;
+            transition: color 0.5s ease;
+            color: var(--current-theme);
         }
 
         .fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -91,13 +213,12 @@
 
 
         .question-image-container {
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 25px auto;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px auto;
             border-radius: 50%;
             overflow: hidden;
-
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             background: #fff;
             transition: transform 0.5s ease;
         }
@@ -114,48 +235,59 @@
             display: block;
             width: 100%;
             padding: 18px 20px;
-            margin: 14px 0;
-
+            margin: 15px 0;
 
             background: #fff;
-
-
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.06);
 
             cursor: pointer;
             font-family: inherit;
             font-size: 16px;
-            color: #444;
+            color: #555;
             border-radius: 12px;
 
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
 
-            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
-
-
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
 
-        .btn:active {
-            transform: scale(0.97);
-            background: #fcfcfc;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        .btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: var(--current-theme);
+            z-index: -1;
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity: 0.15;
         }
 
 
+        .btn.filled::after {
+            width: 100%;
+            opacity: 1;
+        }
+        .btn.filled {
+            color: #fff !important;
+            border-color: transparent;
+            transform: scale(0.98);
+            box-shadow: none;
+        }
+
+        /* 悬停效果 (电脑端) */
         @media (hover: hover) {
             .btn:hover {
-
-                transform: translateY(-3px);
-
-                box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.06);
                 border-color: var(--current-theme);
                 color: var(--current-theme);
-                font-weight: 500;
             }
         }
 
@@ -183,46 +315,19 @@
             position: relative;
             margin-bottom: 20px;
             color: #000;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
             animation: printReceipt 1s ease-out forwards;
         }
 
-
-        .receipt-content {
-            padding: 20px 25px;
-            background: #fff;
-            background-image: radial-gradient(circle at 10px -5px, transparent 12px, #fff 13px);
-            background-size: 20px 20px;
-            background-position: 0 0;
-            background-repeat: repeat-x;
-        }
-
         .receipt::before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(135deg, transparent 10px, #fff 0),
-                        linear-gradient(225deg, transparent 10px, #fff 0);
-            background-position: top left, top right;
-            background-size: 20px 20px;
-            background-repeat: repeat-x;
+            content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 20px;
+            background: linear-gradient(135deg, transparent 10px, #fff 0), linear-gradient(225deg, transparent 10px, #fff 0);
+            background-position: top left, top right; background-size: 20px 20px; background-repeat: repeat-x;
         }
-
         .receipt::after {
-            content: "";
-            position: absolute;
-            bottom: -20px;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(315deg, transparent 10px, #fff 0),
-                        linear-gradient(45deg, transparent 10px, #fff 0);
-            background-position: top left, top right;
-            background-size: 20px 20px;
-            background-repeat: repeat-x;
+            content: ""; position: absolute; bottom: -20px; left: 0; width: 100%; height: 20px;
+            background: linear-gradient(315deg, transparent 10px, #fff 0), linear-gradient(45deg, transparent 10px, #fff 0);
+            background-position: top left, top right; background-size: 20px 20px; background-repeat: repeat-x;
         }
 
         @keyframes printReceipt {
@@ -230,66 +335,12 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        .receipt-header {
-            text-align: center;
-            border-bottom: 2px dashed #333;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
+        .receipt-header { text-align: center; border-bottom: 2px dashed #333; padding-bottom: 15px; margin-bottom: 15px; }
+        .receipt-body h2 { font-size: 24px; margin: 15px 0; font-weight: 900; color: #000; letter-spacing: -0.5px; }
+        .receipt-text { font-size: 15px; line-height: 1.6; margin-bottom: 25px; color: #333; font-weight: 500; }
+        .receipt-footer { border-top: 2px dashed #333; padding-top: 15px; font-size: 11px; text-align: center; opacity: 0.8; font-weight: bold; }
 
-        .receipt-body h2 {
-            font-size: 24px;
-            margin: 15px 0;
-            font-weight: 900;
-            color: #000;
-            letter-spacing: -0.5px;
-        }
-
-        .receipt-text {
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .receipt-footer {
-            border-top: 2px dashed #333;
-            padding-top: 15px;
-            font-size: 11px;
-            text-align: center;
-            opacity: 0.8;
-            font-weight: bold;
-        }
-
-        .color-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-            border: 1px solid #000;
-            position: relative;
-            top: 2px;
-        }
-
-        .retry-btn {
-            background: none;
-            border: 2px solid #000;
-            border-radius: 20px;
-            margin-top: 15px;
-            padding: 8px 20px;
-            font-family: inherit;
-            font-size: 12px;
-            color: #000;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        .retry-btn:active {
-            background: #000;
-            color: #fff;
-        }
+        .color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; border: 1px solid #000; position: relative; top: 2px; }
 
         .hidden { display: none; }
     </style>
@@ -303,11 +354,25 @@
     </div>
 
     <div id="start-screen" class="container fade-in">
+        <div class="vending-machine-art">
+            <div class="vm-window">
+                <div class="vm-ball" style="width:30px; height:30px; background:#ffda84; top:20px; left:15px;"></div>
+                <div class="vm-ball" style="width:25px; height:25px; background:#b3b3e0; top:40px; right:20px;"></div>
+                <div class="vm-ball" style="width:20px; height:20px; background:#ffdfd6; top:10px; right:40px;"></div>
+            </div>
+            <div class="vm-controls">
+                <div class="vm-slot"></div>
+                <div id="coin" class="coin-trigger"></div>
+            </div>
+            <div class="vm-out"></div>
+        </div>
+
         <h1>无意义贩卖机</h1>
-        <p style="margin-bottom: 50px; font-style: italic; opacity: 0.7; line-height: 2;">
+        <p class="subtitle">NONSENSE VENDING MACHINE</p>
+        <p style="margin-bottom: 50px; font-size: 14px; color: #666; line-height: 2; font-weight: 300; opacity: 0.9;">
             这里不出售逻辑<br>只找零随机的浪漫
         </p>
-        <button class="btn" style="font-weight: bold;" onclick="startQuiz()">投币开始</button>
+        <button class="btn" style="font-weight: bold;" onclick="insertCoinAndStart()">投币开始</button>
     </div>
 
     <div id="quiz-screen" class="container hidden">
@@ -340,7 +405,7 @@
                 <div class="receipt-footer">
                     <p>THANK YOU FOR BEING WEIRD.</p>
                     <p style="margin-top:5px;">请截图保管您的浪漫存根</p>
-                    <button class="retry-btn" onclick="location.reload()">再买一张</button>
+                    <button class="btn" style="margin-top:20px; border:1px solid #333;" onclick="location.reload()">再买一张</button>
                 </div>
             </div>
         </div>
@@ -375,56 +440,32 @@
                 text: "你认为美是：",
                 img: "Q2.png",
                 options: [
-                    { t: "阿芙洛狄忒", s: 1 },
-                    { t: "世界", s: 2 },
-                    { t: "知识", s: 3 },
-                    { t: "鲸落", s: 4 },
-                    { t: "星星的毁灭", s: 5 },
-                    { t: "缺失", s: 6 },
-                    { t: "两条平行线相交的瞬间", s: 7 },
-                    { t: "所有语言都无法抵达的寂静", s: 8 }
+                    { t: "阿芙洛狄忒", s: 1 }, { t: "世界", s: 2 }, { t: "知识", s: 3 }, { t: "鲸落", s: 4 },
+                    { t: "星星的毁灭", s: 5 }, { t: "缺失", s: 6 }, { t: "两条平行线相交的瞬间", s: 7 }, { t: "所有语言都无法抵达的寂静", s: 8 }
                 ]
             },
             {
                 text: "时间在你眼中是什么形状？",
                 img: "Q3.png",
                 options: [
-                    { t: "一个没有出口的图书馆", s: 1 },
-                    { t: "一张不断写满又擦除的草稿纸", s: 2 },
-                    { t: "虚线", s: 3 },
-                    { t: "溶解在水中的方糖", s: 4 },
-                    { t: "时间是四维生物", s: 5 },
-                    { t: "无意义", s: 6 },
-                    { t: "昨夜窗外的雨滴声", s: 7 },
-                    { t: "一只不断飞向远方的海鸥", s: 8 }
+                    { t: "一个没有出口的图书馆", s: 1 }, { t: "一张不断写满又擦除的草稿纸", s: 2 }, { t: "虚线", s: 3 }, { t: "溶解在水中的方糖", s: 4 },
+                    { t: "时间是四维生物", s: 5 }, { t: "无意义", s: 6 }, { t: "昨夜窗外的雨滴声", s: 7 }, { t: "一只不断飞向远方的海鸥", s: 8 }
                 ]
             },
             {
                 text: "你此刻是什么颜色：",
                 img: "Q4.png",
                 options: [
-                    { t: "星期二的浅蓝色", s: 1 },
-                    { t: "八分熟", s: 2 },
-                    { t: "黎明前五分钟的紫色", s: 3 },
-                    { t: "一拳打烂世界", s: 4 },
-                    { t: "失去颜色", s: 5 },
-                    { t: "一个秘密的重量，越重越黑", s: 6 },
-                    { t: "肉色", s: 7 },
-                    { t: "光的颜色", s: 8 }
+                    { t: "星期二的浅蓝色", s: 1 }, { t: "八分熟", s: 2 }, { t: "黎明前五分钟的紫色", s: 3 }, { t: "一拳打烂世界", s: 4 },
+                    { t: "失去颜色", s: 5 }, { t: "一个秘密的重量，越重越黑", s: 6 }, { t: "肉色", s: 7 }, { t: "光的颜色", s: 8 }
                 ]
             },
             {
                 text: "你是一封信，你希望被投递到哪里？",
                 img: "Q5.png",
                 options: [
-                    { t: "十年之前", s: 1 },
-                    { t: "一个被遗忘的色彩", s: 2 },
-                    { t: "未完成的下一行诗", s: 3 },
-                    { t: "世界的尽头", s: 4 },
-                    { t: "海底的第三个抽屉", s: 5 },
-                    { t: "火星", s: 6 },
-                    { t: "随便哪里，只要不是这里", s: 7 },
-                    { t: "无限", s: 8 }
+                    { t: "十年之前", s: 1 }, { t: "一个被遗忘的色彩", s: 2 }, { t: "未完成的下一行诗", s: 3 }, { t: "世界的尽头", s: 4 },
+                    { t: "海底的第三个抽屉", s: 5 }, { t: "火星", s: 6 }, { t: "随便哪里，只要不是这里", s: 7 }, { t: "无限", s: 8 }
                 ]
             }
         ];
@@ -478,6 +519,22 @@
         let currentQIndex = 0;
         let totalScore = 0;
 
+        function insertCoinAndStart() {
+            const coin = document.getElementById('coin');
+            const btn = document.querySelector('#start-screen .btn');
+
+
+            btn.classList.add('filled');
+
+
+            coin.classList.add('inserting-coin');
+
+
+            setTimeout(() => {
+                startQuiz();
+            }, 800);
+        }
+
         function startQuiz() {
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -488,10 +545,8 @@
         function renderQuestion() {
             const q = questions[currentQIndex];
 
-
             const themeColor = questionColors[currentQIndex % questionColors.length];
             document.documentElement.style.setProperty('--current-theme', themeColor);
-
 
             const blobs = document.querySelectorAll('.blob');
             blobs.forEach(blob => {
@@ -501,26 +556,22 @@
 
             const qText = document.getElementById('question-text');
             qText.innerText = q.text;
-            qText.style.textShadow = `0 0 20px ${themeColor}`;
-
+            qText.style.color = themeColor;
+            qText.style.textShadow = 'none';
 
             const qImage = document.getElementById('q-image');
             qImage.src = q.img;
 
-
             const imgContainer = document.querySelector('.question-image-container');
             imgContainer.classList.remove('fade-in');
-            void imgContainer.offsetWidth; // 触发重绘
+            void imgContainer.offsetWidth;
             imgContainer.classList.add('fade-in');
 
-
             document.getElementById('q-num').innerText = currentQIndex + 1;
-
 
             qText.classList.remove('fade-in');
             void qText.offsetWidth;
             qText.classList.add('fade-in');
-
 
             const optContainer = document.getElementById('options-container');
             optContainer.innerHTML = '';
@@ -531,19 +582,27 @@
                 const btn = document.createElement('button');
                 btn.className = 'btn';
                 btn.innerText = opt.t;
-                btn.onclick = () => selectOption(opt.s);
+
+                btn.onclick = (e) => selectOption(opt.s, e.target);
                 optContainer.appendChild(btn);
             });
         }
 
-        function selectOption(score) {
-            totalScore += score;
-            currentQIndex++;
-            if (currentQIndex < questions.length) {
-                renderQuestion();
-            } else {
-                showResult();
-            }
+
+        function selectOption(score, btnElement) {
+
+            btnElement.classList.add('filled');
+
+
+            setTimeout(() => {
+                totalScore += score;
+                currentQIndex++;
+                if (currentQIndex < questions.length) {
+                    renderQuestion();
+                } else {
+                    showResult();
+                }
+            }, 300);
         }
 
         function showResult() {
@@ -563,7 +622,6 @@
 
             const colorBox = document.getElementById('result-color-box');
             colorBox.innerHTML = `<span class="color-dot" style="background-color:${finalResult.colorCode}"></span><span style="font-size:12px; font-family:'Courier New', monospace; color:#000; font-weight:bold;">${finalResult.colorName} ${finalResult.colorCode}</span>`;
-
 
             const blobs = document.querySelectorAll('.blob');
             blobs.forEach(blob => {
