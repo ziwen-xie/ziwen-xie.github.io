@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <title>无意义贩卖机 (最终版)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>无意义贩卖机</title>
     <style>
 
         :root {
             --text-color: #333;
-            --current-theme: #555;
+            --current-theme: #888;
         }
 
         body {
@@ -36,75 +36,77 @@
             filter: blur(60px);
             opacity: 0.5;
             transition: all 1s ease;
+            pointer-events: none;
         }
 
         .blob {
             position: absolute;
             border-radius: 50%;
             mix-blend-mode: multiply;
-            animation: move 20s infinite ease-in-out alternate;
+            animation: move 25s infinite ease-in-out alternate;
             transition: background-color 1.5s ease;
         }
 
-        .blob-1 { top: -10%; left: -10%; width: 50vmax; height: 50vmax; background-color: #ffda84; animation-delay: 0s; }
-        .blob-2 { bottom: -20%; right: -10%; width: 60vmax; height: 60vmax; background-color: #ffdfd6; animation-delay: -5s; }
-        .blob-3 { bottom: 10%; left: 20%; width: 40vmax; height: 40vmax; background-color: #b3b3e0; animation-delay: -10s; }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background-color: #ffda84; animation-delay: 0s; }
+        .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background-color: #ffdfd6; animation-delay: -5s; }
+        .blob-3 { bottom: 10%; left: 20%; width: 40vw; height: 40vw; background-color: #b3b3e0; animation-delay: -10s; }
 
         @keyframes move {
             0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            50% { transform: translate(10%, 20%) rotate(90deg) scale(1.1); }
-            100% { transform: translate(-10%, 10%) rotate(180deg) scale(0.9); }
+            50% { transform: translate(5%, 10%) rotate(45deg) scale(1.1); }
+            100% { transform: translate(-5%, 5%) rotate(90deg) scale(0.9); }
         }
 
+
         .container {
-            width: 88%;
-            max-width: 500px;
+            width: 85%;
+            max-width: 400px;
             text-align: center;
             position: relative;
             z-index: 2;
+            padding: 20px 0;
         }
 
-        h1, h2 {
+        h1 {
             font-weight: normal;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            font-size: 32px;
+            color: #222;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.5);
+        }
+
+        h2 {
+            font-weight: normal;
+            letter-spacing: 1px;
             margin-bottom: 30px;
-            line-height: 1.4;
-            transition: color 0.5s ease;
+            font-size: 22px;
+            line-height: 1.5;
+            color: #333;
+            transition: color 0.3s;
         }
 
-
-        h1 { font-size: 28px; margin-bottom: 40px; }
-        h2 { font-size: 22px; }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 
         .btn {
             display: block;
             width: 100%;
-            padding: 16px 15px;
-            margin: 12px 0;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(0,0,0,0.1);
+            padding: 18px 20px;
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(0,0,0,0.05);
             cursor: pointer;
             font-family: inherit;
             font-size: 16px;
-            transition: all 0.3s;
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-
-
             color: #444;
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            transition: all 0.2s ease;
             -webkit-tap-highlight-color: transparent;
-            appearance: none;
-            -webkit-appearance: none;
+            user-select: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
         .btn:active {
@@ -112,25 +114,26 @@
             background: rgba(255, 255, 255, 0.9);
         }
 
-
         @media (hover: hover) {
             .btn:hover {
                 background: #fff;
-                transform: scale(1.02);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 15px rgba(0,0,0,0.05);
                 border-color: var(--current-theme);
-                color: var(--current-theme);
+                letter-spacing: 1px;
             }
         }
 
+
         .progress-container {
             position: fixed;
-            top: 25px;
-            right: 25px;
+            top: 30px;
+            right: 30px;
             font-size: 12px;
-            opacity: 0.6;
+            opacity: 0.5;
             letter-spacing: 1px;
             font-family: 'Courier New', Courier, monospace;
+            z-index: 10;
         }
 
 
@@ -138,82 +141,126 @@
 
         .receipt {
             background: #fff;
-            padding: 25px;
             width: 100%;
             box-sizing: border-box;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
             text-align: left;
             font-family: 'Courier New', Courier, monospace;
             position: relative;
-            transform-origin: top;
-            animation: printReceipt 1.5s ease-out forwards;
             margin-bottom: 20px;
+            color: #000;
+
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
+            animation: printReceipt 1s ease-out forwards;
         }
 
 
-        .receipt::before, .receipt::after {
+        .receipt-content {
+            padding: 20px 25px;
+            background: #fff;
+
+            background-image: radial-gradient(circle at 10px -5px, transparent 12px, #fff 13px);
+            background-size: 20px 20px;
+            background-position: 0 0;
+            background-repeat: repeat-x;
+        }
+
+
+        .receipt::before {
             content: "";
             position: absolute;
+            top: -10px;
             left: 0;
             width: 100%;
-            height: 6px;
-            background-size: 12px 12px;
+            height: 20px;
+
+            background: linear-gradient(135deg, transparent 10px, #fff 0),
+                        linear-gradient(225deg, transparent 10px, #fff 0);
+            background-position: top left, top right;
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
         }
-        .receipt::before {
-            top: -6px;
-            background: linear-gradient(45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%),
-                        linear-gradient(-45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%);
-        }
+
+
         .receipt::after {
-            bottom: -6px;
-            background: linear-gradient(45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%),
-                        linear-gradient(-45deg, transparent 33.3%, #fff 33.3%, #fff 66.6%, transparent 66.6%);
-            transform: rotate(180deg);
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+
+            background: linear-gradient(315deg, transparent 10px, #fff 0),
+                        linear-gradient(45deg, transparent 10px, #fff 0);
+            background-position: top left, top right;
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
         }
 
         @keyframes printReceipt {
-            0% { opacity: 0; transform: translateY(-30px) scaleY(0.9); }
-            100% { opacity: 1; transform: translateY(0) scaleY(1); }
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .receipt-header {
             text-align: center;
-            border-bottom: 1px dashed #aaa;
+            border-bottom: 2px dashed #333; /* 内部虚线 */
             padding-bottom: 15px;
             margin-bottom: 15px;
         }
 
         .receipt-body h2 {
-            font-size: 22px;
-            margin: 10px 0;
-            font-weight: bold;
+            font-size: 24px;
+            margin: 15px 0;
+            font-weight: 900;
             color: #000;
+            letter-spacing: -0.5px;
         }
 
         .receipt-text {
             font-size: 15px;
-            line-height: 1.7;
+            line-height: 1.6;
             margin-bottom: 25px;
-            color: #444;
+            color: #333;
+            font-weight: 500;
         }
 
         .receipt-footer {
-            border-top: 1px dashed #aaa;
+            border-top: 2px dashed #333; /* 内部虚线 */
             padding-top: 15px;
             font-size: 11px;
             text-align: center;
-            opacity: 0.7;
+            opacity: 0.8;
+            font-weight: bold;
         }
 
         .color-dot {
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             margin-right: 8px;
-            border: 1px solid rgba(0,0,0,0.2);
+            border: 1px solid #000;
             position: relative;
             top: 2px;
+        }
+
+
+        .retry-btn {
+            background: none;
+            border: 2px solid #000;
+            border-radius: 20px;
+            margin-top: 15px;
+            padding: 8px 20px;
+            font-family: inherit;
+            font-size: 12px;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .retry-btn:active {
+            background: #000;
+            color: #fff;
         }
 
         .hidden { display: none; }
@@ -229,10 +276,10 @@
 
     <div id="start-screen" class="container fade-in">
         <h1>无意义贩卖机</h1>
-        <p style="margin-bottom: 40px; font-style: italic; opacity: 0.8; line-height: 1.8;">
+        <p style="margin-bottom: 50px; font-style: italic; opacity: 0.7; line-height: 2;">
             这里不出售逻辑<br>只找零随机的浪漫
         </p>
-        <button class="btn" style="color: #333;" onclick="startQuiz()">投币开始</button>
+        <button class="btn" onclick="startQuiz()">投币开始</button>
     </div>
 
     <div id="quiz-screen" class="container hidden">
@@ -243,23 +290,24 @@
 
     <div id="result-screen" class="container">
         <div class="receipt">
-            <div class="receipt-header">
-                <div style="font-weight:bold; letter-spacing:1px;">无逻辑商店</div>
-                <div style="font-size: 10px; margin-top:5px;">DATE: <span id="date-now"></span></div>
-                <div style="font-size: 10px;">TIME: <span id="time-now"></span></div>
-            </div>
+            <div style="padding: 25px;"> <div class="receipt-header">
+                    <div style="font-weight:900; letter-spacing:2px; font-size:18px;">无逻辑商店</div>
+                    <div style="font-size: 10px; margin-top:8px;">DATE: <span id="date-now"></span></div>
+                    <div style="font-size: 10px;">TIME: <span id="time-now"></span></div>
+                </div>
 
-            <div class="receipt-body">
-                <div style="font-size: 12px; color:#888; margin-bottom:5px;">ITEM PURCHASED:</div>
-                <h2 id="result-title">结果标题</h2>
-                <div id="result-color-box" style="margin-bottom:20px; display:flex; align-items:center;"></div>
-                <p id="result-desc" class="receipt-text">结果解释文案...</p>
-            </div>
+                <div class="receipt-body">
+                    <div style="font-size: 12px; color:#555; margin-bottom:5px;">ITEM PURCHASED:</div>
+                    <h2 id="result-title">结果标题</h2>
+                    <div id="result-color-box" style="margin-bottom:20px; display:flex; align-items:center;"></div>
+                    <p id="result-desc" class="receipt-text">结果解释文案...</p>
+                </div>
 
-            <div class="receipt-footer">
-                <p>THANK YOU FOR BEING WEIRD.</p>
-                <p>请截图保管您的浪漫存根</p>
-                <button onclick="location.reload()" style="background:none; border:none; border-bottom:1px solid #666; margin-top:15px; padding:5px; font-family:inherit; font-size:12px; color:#666;">再买一张</button>
+                <div class="receipt-footer">
+                    <p>THANK YOU FOR BEING WEIRD.</p>
+                    <p style="margin-top:5px;">请截图保管您的浪漫存根</p>
+                    <button class="retry-btn" onclick="location.reload()">再买一张</button>
+                </div>
             </div>
         </div>
     </div>
@@ -271,9 +319,8 @@
             "#b08db5",
             "#8fbc8f",
             "#d8a499",
-            "#e6cca0"
+            "#c2b280"
         ];
-
 
         const questions = [
             {
@@ -343,7 +390,6 @@
             }
         ];
 
-
         const rawResults = [
             {title: "黄昏与狗", desc: "成功！成功在向你奔来！", colorCode: "#ffda84", colorName: "橘黄"},
             {title: "爆浆草莓", desc: "不试试怎么知道它会不会爆浆", colorCode: "#ffdfd6", colorName: "粉红"},
@@ -390,7 +436,6 @@
         });
 
 
-
         let currentQIndex = 0;
         let totalScore = 0;
 
@@ -412,13 +457,12 @@
             const blobs = document.querySelectorAll('.blob');
             blobs.forEach(blob => {
                 blob.style.backgroundColor = themeColor;
-                blob.style.opacity = '0.4';
             });
 
 
             const qText = document.getElementById('question-text');
-            qText.style.color = themeColor;
             qText.innerText = q.text;
+            qText.style.textShadow = `0 0 20px ${themeColor}`;
 
 
             document.getElementById('q-num').innerText = currentQIndex + 1;
@@ -427,6 +471,7 @@
             qText.classList.remove('fade-in');
             void qText.offsetWidth;
             qText.classList.add('fade-in');
+
 
             const optContainer = document.getElementById('options-container');
             optContainer.innerHTML = '';
@@ -437,11 +482,6 @@
                 const btn = document.createElement('button');
                 btn.className = 'btn';
                 btn.innerText = opt.t;
-
-                btn.style.color = "#444";
-
-                btn.style.borderColor = hexToRgba(themeColor, 0.3);
-
                 btn.onclick = () => selectOption(opt.s);
                 optContainer.appendChild(btn);
             });
@@ -450,7 +490,6 @@
         function selectOption(score) {
             totalScore += score;
             currentQIndex++;
-
             if (currentQIndex < questions.length) {
                 renderQuestion();
             } else {
@@ -474,7 +513,7 @@
             document.getElementById('time-now').innerText = now.toLocaleTimeString();
 
             const colorBox = document.getElementById('result-color-box');
-            colorBox.innerHTML = `<span class="color-dot" style="background-color:${finalResult.colorCode}"></span><span style="font-size:12px; font-family:'Courier New', monospace; color:#666;">${finalResult.colorName} ${finalResult.colorCode}</span>`;
+            colorBox.innerHTML = `<span class="color-dot" style="background-color:${finalResult.colorCode}"></span><span style="font-size:12px; font-family:'Courier New', monospace; color:#000; font-weight:bold;">${finalResult.colorName} ${finalResult.colorCode}</span>`;
 
 
             const blobs = document.querySelectorAll('.blob');
@@ -484,20 +523,6 @@
             });
 
             document.body.style.backgroundColor = '#fff';
-        }
-
-
-        function hexToRgba(hex, alpha) {
-            let c;
-            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-                c= hex.substring(1).split('');
-                if(c.length== 3){
-                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-                }
-                c= '0x'+c.join('');
-                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
-            }
-            return 'rgba(200,200,200,0.2)';
         }
     </script>
 </body>
